@@ -2,13 +2,14 @@ from flask import Flask, render_template, request,jsonify
 from flask_cors import CORS,cross_origin
 import requests
 from bs4 import BeautifulSoup
-from urllib.request import urlopen as uReq
+#from urllib.request import urlopen as uReq
 import logging
 import pymongo
 logging.basicConfig(filename="scrapper.log" , level=logging.INFO)
 import os
 
-app = Flask(__name__)
+application = Flask(__name__)
+app=application
 
 @app.route("/", methods = ['GET'])
 def homepage():
@@ -58,7 +59,7 @@ def index():
                                 img_data.append(mydict)
                                 with open(os.path.join(save_directory, f"{query}_{image_tags.index(image_tag)}.jpg"), "wb") as f:
                                     f.write(image_data)
-                    client = pymongo.MongoClient("mongodb+srv://snshrivas:Snshrivas@cluster0.ln0bt5m.mongodb.net/?retryWrites=true&w=majority")
+                    client = pymongo.MongoClient("mongodb+srv://snshrivas:Snshrivas@cluster0.u46c4.mongodb.net/?retryWrites=true&w=majority")
                     db = client['image_scrap']
                     review_col = db['image_scrap_data']
                     review_col.insert_many(img_data)          
@@ -67,8 +68,7 @@ def index():
                 except Exception as e:
                     logging.info(e)
                     return 'something is wrong'
-            # return render_template('results.html')
-
+            
     else:
         return render_template('index.html')
 
